@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PROCESS model-entity="JSFProcess">
+ <PROCESS-ITEM NAME="rules:*" PATH="*" SHAPE="32,17,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:*:0" NAME="item" PATH="*" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="inicio::#index.html" NAME="output"
+    PATH="/index.html" TARGET="rules:#index.html" TITLE="inicio" model-entity="JSFProcessItemOutput"/>
+   <PROCESS-ITEM-OUTPUT ID="usuario::#usuario.xhtml" NAME="output1"
+    PATH="/usuario.xhtml" TARGET="rules:#usuario.xhtml" TITLE="usuario" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#index.html" PATH="/index.html"
+  SHAPE="240,33,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:#usuario.xhtml" PATH="/usuario.xhtml"
+  SHAPE="256,177,0,0" model-entity="JSFProcessGroup"/>
+ <PROCESS-ITEM NAME="rules:usuario.xhtml" PATH="usuario.xhtml"
+  SHAPE="32,273,0,0" model-entity="JSFProcessGroup">
+  <PROCESS-ITEM ID="rules:usuario.xhtml:0" NAME="item"
+   PATH="usuario.xhtml" model-entity="JSFProcessItem">
+   <PROCESS-ITEM-OUTPUT ID="sucesso::#mostrarUsuario.xhtml"
+    NAME="output" PATH="/mostrarUsuario.xhtml"
+    TARGET="rules:#mostrarUsuario.xhtml" TITLE="sucesso" model-entity="JSFProcessItemOutput"/>
+  </PROCESS-ITEM>
+ </PROCESS-ITEM>
+ <PROCESS-ITEM NAME="rules:#mostrarUsuario.xhtml"
+  PATH="/mostrarUsuario.xhtml" SHAPE="240,289,0,0" model-entity="JSFProcessGroup"/>
+</PROCESS>
