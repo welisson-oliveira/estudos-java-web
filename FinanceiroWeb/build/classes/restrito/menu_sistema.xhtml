@@ -13,6 +13,9 @@
 				<h:commandButton action="/restrito/categoria" value="Categorias" /> 
 				
 				<h:commandButton value="Contas" action="/restrito/conta"/>
+				
+				<h:commandButton action="/restrito/lancamento" value="Lançamentos" />
+				
 				<h:selectOneMenu value="#{contextoBean.contaAtiva.conta}"
 					valueChangeListener="#{contextoBean.setContaAtiva}" 
 					rendered="#{not empty contextoBean}"
