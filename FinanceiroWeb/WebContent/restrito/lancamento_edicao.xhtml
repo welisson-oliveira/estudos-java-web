@@ -9,15 +9,18 @@
 		<h:messages />
 		<h:inputHidden value="#{lancamentoBean.editado.lancamento}" />
 
-		<h:panelGrid columns="4">
+		<h:panelGrid columns="5">
+			<h:outputLabel value="Entidade" for="entidade" />
 			<h:outputLabel value="Data" for="data" />
 			<h:outputLabel value="Categoria" for="categoria" />
 			<h:outputLabel value="Descrição" for="descricao" />
 			<h:outputLabel value="Valor" for="valor" />
 
+			<p:autoComplete id="entidade" value="#{lancamentoBean.entidade}" completeMethod="#{lancamentoBean.completeText}" />
+
 			<p:calendar id="data" value="#{lancamentoBean.editado.data}"
 				pattern="dd/MM/yyyy" />
-
+				
 			<h:selectOneMenu id="categoria"
 				value="#{lancamentoBean.editado.categoria}">
 				<f:selectItems value="#{categoriaBean.categoriasSelect}" />

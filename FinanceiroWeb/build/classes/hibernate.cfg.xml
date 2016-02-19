@@ -25,6 +25,7 @@
 		<mapping class="financeiro.conta.Conta" />
 		<mapping class="financeiro.categoria.Categoria" />
 		<mapping class="financeiro.lancamento.Lancamento" />
+		<mapping class="financeiro.entidade.Entidade" />
 		
 		
 	</session-factory>

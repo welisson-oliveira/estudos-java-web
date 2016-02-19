@@ -21,6 +21,7 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import financeiro.categoria.Categoria;
 import financeiro.conta.Conta;
+import financeiro.entidade.Entidade;
 import financeiro.usuario.Usuario;
 
 @Entity
@@ -36,6 +37,11 @@ public class Lancamento implements Serializable {
 	@GeneratedValue		
 	@Column(name = "codigo")
 	private Integer lancamento;
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "entidade", nullable = false)
+	@ForeignKey(name = "fk_lancamento_entidade")
+	private Entidade entidade;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@OnDelete(action=OnDeleteAction.CASCADE)
@@ -57,6 +63,8 @@ public class Lancamento implements Serializable {
 	
 	@Temporal(TemporalType.DATE)
 	private Date data;
+	
+	private Integer rating;
 	
 	private String descricao;
 	
@@ -118,16 +126,38 @@ public class Lancamento implements Serializable {
 	public void setValor(BigDecimal valor) {
 		this.valor = valor;
 	}
+	
+	public Entidade getEntidade() {
+		return entidade;
+	}
+
+	public void setEntidade(Entidade entidade) {
+		this.entidade = entidade;
+	}
+	
+	public Integer getRating() {
+		return rating;
+	}
+
+	public void setRating(Integer rating) {
+		this.rating = rating;
+	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((categoria == null) ? 0 : categoria.hashCode());
+		result = prime * result
+				+ ((categoria == null) ? 0 : categoria.hashCode());
 		result = prime * result + ((conta == null) ? 0 : conta.hashCode());
 		result = prime * result + ((data == null) ? 0 : data.hashCode());
-		result = prime * result + ((descricao == null) ? 0 : descricao.hashCode());
-		result = prime * result + ((lancamento == null) ? 0 : lancamento.hashCode());
+		result = prime * result
+				+ ((descricao == null) ? 0 : descricao.hashCode());
+		result = prime * result
+				+ ((entidade == null) ? 0 : entidade.hashCode());
+		result = prime * result
+				+ ((lancamento == null) ? 0 : lancamento.hashCode());
+		result = prime * result + ((rating == null) ? 0 : rating.hashCode());
 		result = prime * result + ((usuario == null) ? 0 : usuario.hashCode());
 		result = prime * result + ((valor == null) ? 0 : valor.hashCode());
 		return result;
@@ -162,10 +192,20 @@ public class Lancamento implements Serializable {
 				return false;
 		} else if (!descricao.equals(other.descricao))
 			return false;
+		if (entidade == null) {
+			if (other.entidade != null)
+				return false;
+		} else if (!entidade.equals(other.entidade))
+			return false;
 		if (lancamento == null) {
 			if (other.lancamento != null)
 				return false;
 		} else if (!lancamento.equals(other.lancamento))
+			return false;
+		if (rating == null) {
+			if (other.rating != null)
+				return false;
+		} else if (!rating.equals(other.rating))
 			return false;
 		if (usuario == null) {
 			if (other.usuario != null)
@@ -179,7 +219,6 @@ public class Lancamento implements Serializable {
 			return false;
 		return true;
 	}
-	
-	
+
 	
 }

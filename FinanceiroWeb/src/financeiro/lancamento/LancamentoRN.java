@@ -26,4 +26,9 @@ public class LancamentoRN {
 	public List<Lancamento> listar(Conta conta, Date dataInicio, Date dataFim) { 
 		return this.lancamentoDAO.listar(conta, dataInicio, dataFim);
 	}
+	public void atualizarAvaliacao(Lancamento lancamento) {
+		System.out.println("---------------ID: "+lancamento.getLancamento());
+		lancamento = this.carregar(lancamento.getLancamento());
+		this.lancamentoDAO.salvar(lancamento);
+	}
 }
