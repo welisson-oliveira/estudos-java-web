@@ -18,6 +18,15 @@ xmlns:composite = "http://java.sun.com/jsf/composite">
 		<composite:attribute name="colunaSaldo" type="java.lang.Boolean" default="true"/>
 	</composite:interface>
 	<composite:implementation>
+	
+	<script >
+		function lancamentoSelecionado(linha){
+//			alert("Linha selecionada foi: "+linha);
+			PrimeFaces.ajax.AjaxRequest(alert("SERA?"));
+
+		}
+	</script>
+	
 		<p:dataTable 
 			scrollable="true" 
 			scrollHeight="#{cc.attrs.height}" 
@@ -42,11 +51,11 @@ xmlns:composite = "http://java.sun.com/jsf/composite">
 			<p:column style="width:70px">
 				<f:facet name="header">Favorecidos/Fornecedores</f:facet>
 				<h:outputText value="#{lancamento.entidade.nome}" />
-				<p:rating value="lancamento.rating" >
+				<p:rating value="lancamento.rating" onRate="lancamentoSelecionado(#{index})" >
 					
-					<p:ajax event="rate" listener="#{lancamentoBean.onrate}" >
-						<f:setPropertyActionListener target="#{lancamentoBean.selecionado}" value="#{lancamento}" />
-					</p:ajax>
+					<p:ajax event="rate" listener="#{lancamentoBean.onrate}"  />
+						<!-- <f:setPropertyActionListener target="#{lancamentoBean.selecionado}" value="#{lancamento}" />  -->
+
 					
             		<p:ajax event="cancel" listener="#{lancamentoBean.oncancel}" />
             		
@@ -78,14 +87,7 @@ xmlns:composite = "http://java.sun.com/jsf/composite">
 			</p:column>
 		</p:dataTable>
 		
-		<script language="JavaScritp" type="text/javascript">
-			function lancamentoSelecionado(){
-				alert("show")!
-			}
-		</script>
-		
 	</composite:implementation>
-	
 	
 </html>
 
