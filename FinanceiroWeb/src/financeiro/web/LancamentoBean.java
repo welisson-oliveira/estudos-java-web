@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.*;
 
 import javax.faces.bean.*;
+import javax.faces.context.FacesContext;
 
 import org.primefaces.event.RateEvent;
 
@@ -24,6 +25,9 @@ public class LancamentoBean implements Serializable {
 	private float saldoGeral;
 	private Lancamento editado = new Lancamento();
 	private Lancamento selecionado = new Lancamento();
+	
+	private Integer linhaSelecionada = -1;
+	private String listaAtiva = "";
 	
 	List<Entidade> results = new ArrayList<Entidade>();
 	private String entidade;
@@ -65,7 +69,7 @@ public class LancamentoBean implements Serializable {
 	}
 	
 	private boolean addEntidade(){
-		System.out.println("--------entidade: "+entidade);
+		
 		if(!entidade.equals(null) || !entidade.trim().equals("")){
 			for(Entidade e : results){
 				if(entidade.equals(e.getNome())){
@@ -165,18 +169,35 @@ public class LancamentoBean implements Serializable {
 		return resultNomes;
 	}
 	
-	public void onrate(RateEvent rateEvent) {
-		System.out.println("---------------Selecionado: "+selecionado.getValor());
-		this.selecionado.setRating(( Integer.parseInt(rateEvent.getRating().toString())));
-        LancamentoRN lancamentoRN = new LancamentoRN();
-		lancamentoRN.atualizarAvaliacao(this.selecionado);
+	public void onRate(RateEvent rateEvent) {
+		if(linhaSelecionada != -1){
+			
+			List<Lancamento> lancamentos = selectList();
+			System.out.println("onRate--------------------Nota: "+lancamentos.get(this.linhaSelecionada).getRating());
+			LancamentoRN lancamentoRN = new LancamentoRN();
+			lancamentoRN.salvar(lancamentos.get(this.linhaSelecionada));
+			linhaSelecionada = -1;
+		}
     }
-     
-    public void oncancel() {
-    	selecionado.setRating(0);
-    	LancamentoRN lancamentoRN = new LancamentoRN();
-		lancamentoRN.atualizarAvaliacao(this.selecionado);
+    
+    public void salvarLinha(){
+    	Map<String, String> requestParamMap = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+		linhaSelecionada = Integer.parseInt(requestParamMap.get("linha"));
+		this.listaAtiva = requestParamMap.get("lista");
     }
+    
+    private List<Lancamento> selectList(){
+		switch(this.listaAtiva){
+		case "geral":
+			return lista;
+		case "ateHoje":
+			return listaAteHoje;
+		case "futuro":
+			return null;
+		
+		}
+		return new ArrayList<Lancamento>();
+	}
 
 	private List<Entidade> getEntidades() {
 		return new EntidadeRN().listar();

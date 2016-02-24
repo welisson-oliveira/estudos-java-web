@@ -16,14 +16,16 @@ xmlns:composite = "http://java.sun.com/jsf/composite">
 		<composite:attribute name="botaoExclusao" type="java.lang.Boolean" default="true" />
 		<composite:attribute name="botaoEdicao" type="java.lang.Boolean" default="true" />
 		<composite:attribute name="colunaSaldo" type="java.lang.Boolean" default="true"/>
+		<composite:attribute name="nomeDaLista" type="String" required="true" shortDescription="Nome informado no metodo selectList() do ManagedBean" />
 	</composite:interface>
 	<composite:implementation>
+	
 		<p:dataTable 
 			scrollable="true" 
 			scrollHeight="#{cc.attrs.height}" 
 			value="#{cc.attrs.lista}"
 			var="lancamento" 
-			rowIndexVar="index">
+			rowIndexVar="linha">
 			<p:column style="width:15px" rendered="#{cc.attrs.botaoEdicao}"> 
 				<p:commandLink action="#{lancamentoBean.editar}" update=":edicao">
 					<h:graphicImage library="imagens" name="editar16.png"/>
@@ -42,14 +44,10 @@ xmlns:composite = "http://java.sun.com/jsf/composite">
 			<p:column style="width:70px">
 				<f:facet name="header">Favorecidos/Fornecedores</f:facet>
 				<h:outputText value="#{lancamento.entidade.nome}" />
-				<p:rating value="lancamento.rating" >
-					
-					<p:ajax event="rate" listener="#{lancamentoBean.onrate}" >
-						<f:setPropertyActionListener target="#{lancamentoBean.selecionado}" value="#{lancamento}" />
-					</p:ajax>
-					
-            		<p:ajax event="cancel" listener="#{lancamentoBean.oncancel}" />
-            		
+				<p:remoteCommand name="salvarLinha" process="@this" id="remoteCommand" actionListener="#{lancamentoBean.salvarLinha}"/>
+				<p:rating value="#{lancamento.rating}" onRate="linhaSelecionada(#{linha},'#{cc.attrs.nomeDaLista}')" cancel="false">
+					<p:ajax process="remoteCommand" />
+					<p:ajax event="rate" listener="#{lancamentoBean.onRate}" />
 				</p:rating>
 			</p:column>
 			<p:column style="width:70px">
@@ -78,9 +76,16 @@ xmlns:composite = "http://java.sun.com/jsf/composite">
 			</p:column>
 		</p:dataTable>
 		
-		<script language="JavaScritp" type="text/javascript">
-			function lancamentoSelecionado(){
-				alert("show")!
+		<script>
+			function linhaSelecionada(linha, lista){
+//				alert(linha);
+				salvarLinha([ {
+					name : 'linha',
+					value : linha
+				},{
+					name : 'lista',
+					value : lista
+				} ]);
 			}
 		</script>
 		
