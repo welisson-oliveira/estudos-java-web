@@ -9,12 +9,9 @@
 		<h:form>
 			<table width="100%">
 			<tr><td>
-			
-				<h:commandButton action="/restrito/categoria" value="Categorias" /> 
-				
 				<h:commandButton value="Contas" action="/restrito/conta"/>
 				
-				<h:commandButton action="/restrito/lancamento" value="Lançamentos" />
+				<h:commandButton action="/restrito/categoria" value="Categorias" /> 
 				
 				<h:selectOneMenu value="#{contextoBean.contaAtiva.conta}"
 					valueChangeListener="#{contextoBean.setContaAtiva}" 
@@ -22,7 +19,13 @@
 					onchange="submit()">
 					<f:selectItems value="#{contaBean.lista}" 
 						var="conta" itemValue="#{conta.conta}" itemLabel="#{conta.descricao}"/>
-				</h:selectOneMenu>				
+				</h:selectOneMenu>
+				
+				<h:commandButton action="/restrito/lancamento" value="Lançamentos" />
+				
+				<h:commandButton action="/restrito/cheque" value="Cheques" />
+				
+								
 			</td>
 			<td align="left">
 				<sec:ifAnyGranted roles="ROLE_ADMINISTRADOR">

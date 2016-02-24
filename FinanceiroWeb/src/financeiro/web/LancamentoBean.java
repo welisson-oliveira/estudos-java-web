@@ -22,6 +22,7 @@ import financeiro.cheque.ChequeId;
 import financeiro.cheque.ChequeRN;
 import financeiro.conta.Conta;
 import financeiro.entidade.Entidade;
+import financeiro.entidade.EntidadeRN;
 import financeiro.lancamento.Lancamento;
 import financeiro.lancamento.LancamentoRN;
 import financeiro.util.ContextoUtil;
@@ -207,6 +208,10 @@ public class LancamentoBean implements Serializable {
 		lancamentoRN.atualizarAvaliacao(this.selecionado);
     }
 
+    private List<Entidade> getEntidades(){
+    	return new EntidadeRN().listar();
+    }
+    
 	public Conta getConta() {
 		return conta;
 	}
@@ -258,4 +263,14 @@ public class LancamentoBean implements Serializable {
 	public Integer getNumeroCheque() {
 		return numeroCheque;
 	}
+
+	public Lancamento getSelecionado() {
+		return selecionado;
+	}
+
+	public void setSelecionado(Lancamento selecionado) {
+		this.selecionado = selecionado;
+	}
+	
+	
 }
