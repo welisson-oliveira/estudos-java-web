@@ -1,12 +1,15 @@
-package financeiro.lancamento;
+package financeiro.cheque;
 
-import financeiro.cheque.Cheque;
-import financeiro.cheque.ChequeDAO;
-import financeiro.cheque.ChequeId;
+import java.util.Date;
+import java.util.List;
+
 import financeiro.conta.Conta;
+import financeiro.lancamento.Lancamento;
 import financeiro.util.DAOFactory;
+import financeiro.util.RNException;
 
 public class ChequeRN {
+
 	private ChequeDAO	chequeDAO;
 
 	public ChequeRN() {
@@ -84,5 +87,5 @@ public class ChequeRN {
 			cheque.setLancamento(null);
 			this.salvar(cheque);
 		}
-	}
+	}	
 }

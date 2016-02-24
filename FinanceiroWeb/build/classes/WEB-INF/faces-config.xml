@@ -1,23 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <faces-config version="2.2" xmlns="http://xmlns.jcp.org/xml/ns/javaee"
- xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
- <navigation-rule>
-  <from-view-id>*</from-view-id>
-  <navigation-case>
-   <from-outcome>inicio</from-outcome>
-   <to-view-id>/index.html</to-view-id>
-  </navigation-case>
-  <navigation-case>
-   <from-outcome>usuario</from-outcome>
-   <to-view-id>/usuario.xhtml</to-view-id>
-  </navigation-case>
- </navigation-rule>
- <navigation-rule>
-  <from-view-id>usuario.xhtml</from-view-id>
-  <navigation-case>
-   <from-outcome>sucesso</from-outcome>
-   <to-view-id>/mostrarUsuario.xhtml</to-view-id>
-  </navigation-case>
- </navigation-rule>
- <application/>
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
+
+
+	<navigation-rule>
+		<from-view-id>*</from-view-id>
+		<navigation-case>
+			<from-outcome>inicio</from-outcome>
+			<to-view-id>/index.html</to-view-id>
+		</navigation-case>
+		<navigation-case>
+			<from-outcome>usuario</from-outcome>
+			<to-view-id>/usuario.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	<navigation-rule>
+		<from-view-id>usuario.xhtml</from-view-id>
+		<navigation-case>
+			<from-outcome>sucesso</from-outcome>
+			<to-view-id>/mostrarUsuario.xhtml</to-view-id>
+		</navigation-case>
+	</navigation-rule>
+	<application>
+		<locale-config>
+			<default-locale>pt_BR</default-locale>
+			<supported-locale>en_US</supported-locale>
+			<supported-locale>pt_BR</supported-locale>
+		</locale-config>
+		<resource-bundle>
+			<base-name>financeiro.idioma.mensagens</base-name>
+			<var>msg</var>
+		</resource-bundle>
+		<!-- <message-bundle>br.com.javaparaweb.financeiro.idioma.CustomMessages</message-bundle> -->
+	</application>
 </faces-config>
