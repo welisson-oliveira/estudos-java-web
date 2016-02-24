@@ -14,13 +14,17 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
 
+import org.primefaces.event.RateEvent;
+
 import financeiro.categoria.Categoria;
 import financeiro.cheque.Cheque;
 import financeiro.cheque.ChequeId;
-import financeiro.conta.Conta;
 import financeiro.cheque.ChequeRN;
+import financeiro.conta.Conta;
+import financeiro.entidade.Entidade;
 import financeiro.lancamento.Lancamento;
 import financeiro.lancamento.LancamentoRN;
+import financeiro.util.ContextoUtil;
 import financeiro.util.RNException;
 
 @ManagedBean(name = "lancamentoBean")
@@ -32,10 +36,16 @@ public class LancamentoBean implements Serializable {
 	private List<Double> saldos;
 	private float saldoGeral;
 	private Lancamento editado = new Lancamento();
+	private Lancamento selecionado = new Lancamento();
 	private Integer	numeroCheque; 
+	
+	List<Entidade> results = new ArrayList<Entidade>();
+	private String entidade;
 
 	@ManagedProperty(value = "#{contextoBean}")
 	private ContextoBean contextoBean;
+	private List<Lancamento> listaAteHoje;
+	private List<Lancamento> listaFuturos;
 
 	public LancamentoBean() {
 		this.novo();
@@ -140,6 +150,62 @@ public class LancamentoBean implements Serializable {
 		}
 		return this.lista;
 	}
+
+	public List<Lancamento> getListaAteHoje() {
+		if (this.listaFuturos == null) {
+			ContextoBean contextoBean = ContextoUtil.getContextoBean();
+			Conta conta = contextoBean.getContaAtiva();
+
+			Calendar hoje = new GregorianCalendar();
+
+			LancamentoRN lancamentoRN = new LancamentoRN();
+			this.listaAteHoje = lancamentoRN
+					.listar(conta, null, hoje.getTime());
+		}
+		return this.listaAteHoje;
+	}
+
+	public List<Lancamento> getListaFuturos() {
+		if (this.listaFuturos == null) {
+			ContextoBean contextoBean = ContextoUtil.getContextoBean();
+			Conta conta = contextoBean.getContaAtiva();
+
+			Calendar amanha = new GregorianCalendar();
+			amanha.add(Calendar.DAY_OF_MONTH, 1);
+
+			LancamentoRN lancamentoRN = new LancamentoRN();
+			this.listaFuturos = lancamentoRN.listar(conta, amanha.getTime(),
+					null);
+		}
+		return this.listaFuturos;
+	}
+
+	public List<String> completeText(String query) {
+		List<Entidade> entities = getEntidades();
+		List<String> resultNomes = new ArrayList<String>();
+		results.clear();
+		for (Entidade e : entities) {
+			if (e.getNome().equals(query)) {
+				results.add(e);
+				resultNomes.add(e.getNome());
+			}
+		}
+
+		return resultNomes;
+	}
+	
+	public void onrate(RateEvent rateEvent) {
+		System.out.println("---------------Selecionado: "+selecionado.getValor());
+		this.selecionado.setRating(( Integer.parseInt(rateEvent.getRating().toString())));
+        LancamentoRN lancamentoRN = new LancamentoRN();
+		lancamentoRN.atualizarAvaliacao(this.selecionado);
+    }
+     
+    public void oncancel() {
+    	selecionado.setRating(0);
+    	LancamentoRN lancamentoRN = new LancamentoRN();
+		lancamentoRN.atualizarAvaliacao(this.selecionado);
+    }
 
 	public Conta getConta() {
 		return conta;
