@@ -1,19 +1,33 @@
 package financeiro.web;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Map;
 
-import javax.faces.bean.*;
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
 
 import org.primefaces.event.RateEvent;
 
 import financeiro.categoria.Categoria;
+import financeiro.cheque.Cheque;
+import financeiro.cheque.ChequeId;
+import financeiro.cheque.ChequeRN;
 import financeiro.conta.Conta;
 import financeiro.entidade.Entidade;
 import financeiro.entidade.EntidadeRN;
-import financeiro.lancamento.*;
+import financeiro.lancamento.Lancamento;
+import financeiro.lancamento.LancamentoRN;
 import financeiro.util.ContextoUtil;
+import financeiro.util.RNException;
 
 @ManagedBean(name = "lancamentoBean")
 @ViewScoped
@@ -21,10 +35,11 @@ public class LancamentoBean implements Serializable {
 	private static final long serialVersionUID = -3050807461213326560L;
 	private List<Lancamento> lista;
 	private Conta conta;
-	private List<Double> saldos = new ArrayList<Double>();
+	private List<Double> saldos;
 	private float saldoGeral;
 	private Lancamento editado = new Lancamento();
 	private Lancamento selecionado = new Lancamento();
+	private Integer	numeroCheque; 
 	
 	private Integer linhaSelecionada = -1;
 	private String listaAtiva = "";
@@ -43,24 +58,44 @@ public class LancamentoBean implements Serializable {
 
 	public String novo() {
 		this.editado = new Lancamento();
-		this.entidade = "";
 		this.editado.setData(new Date());
+		this.numeroCheque = null; 
 		return null;
 	}
 
 	public void editar() {
+		Cheque cheque = this.editado.getCheque();
+		if (cheque != null) {
+			this.numeroCheque = cheque.getChequeId().getCheque();
+		}
+
 	}
 
 	public void salvar() {
-		
-		if(!addEntidade()){
-			return;
-		}
-		
-		
 		this.editado.setUsuario(this.contextoBean.getUsuarioLogado());
 		this.editado.setConta(this.contextoBean.getContaAtiva());
 
+		ChequeRN chequeRN = new ChequeRN(); 
+		ChequeId chequeId = null;
+		if (this.numeroCheque != null) {
+			chequeId = new ChequeId();
+			chequeId.setConta(this.contextoBean.getContaAtiva().getConta());
+			chequeId.setCheque(this.numeroCheque);
+			Cheque cheque = chequeRN.carregar(chequeId);
+			FacesContext context = FacesContext.getCurrentInstance();
+			if (cheque == null) {
+				context.addMessage(null, new FacesMessage("Cheque não cadastrado"));
+				return;
+			} else if (cheque.getSituacao() == Cheque.SITUACAO_CHEQUE_CANCELADO) {
+				context.addMessage(null, new FacesMessage("Cheque já cancelado"));
+				return;				
+			} else {
+				this.editado.setCheque(cheque);
+				chequeRN.baixarCheque(chequeId, this.editado);
+			}
+		}
+
+		
 		LancamentoRN lancamentoRN = new LancamentoRN();
 		lancamentoRN.salvar(this.editado);
 
@@ -68,25 +103,34 @@ public class LancamentoBean implements Serializable {
 		this.lista = null;
 	}
 	
-	private boolean addEntidade(){
-		
-		if(!entidade.equals(null) || !entidade.trim().equals("")){
-			for(Entidade e : results){
-				if(entidade.equals(e.getNome())){
-					editado.setEntidade(e);
-					return true;
-				}
+
+//	private boolean addEntidade(){
+//		
+//		if(!entidade.equals(null) || !entidade.trim().equals("")){
+//			for(Entidade e : results){
+//				if(entidade.equals(e.getNome())){
+//					editado.setEntidade(e);
+//					return true;
+//				}
+//			}
+//		}
+//	}
+
+	public void mudouCheque(ValueChangeEvent event) { 
+		Integer chequeAnterior = (Integer) event.getOldValue();
+		if (chequeAnterior != null) {
+			ChequeRN chequeRN = new ChequeRN();
+			try {
+				chequeRN.desvinculaLancamento(contextoBean.getContaAtiva(), chequeAnterior);
+			} catch (RNException e) {
+				FacesContext context = FacesContext.getCurrentInstance();
+				context.addMessage(null, new FacesMessage(e.getMessage()));
+				return;
+
 			}
-			
-			Entidade ent = new Entidade();
-			ent.setNome(entidade);
-			new EntidadeRN().salvar(ent);
-			editado.setEntidade(ent);
-			
-			return true;
 		}
-		return false;
 	}
+
 
 	public void excluir() {
 		LancamentoRN lancamentoRN = new LancamentoRN();
@@ -199,10 +243,10 @@ public class LancamentoBean implements Serializable {
 		return new ArrayList<Lancamento>();
 	}
 
-	private List<Entidade> getEntidades() {
-		return new EntidadeRN().listar();
-	}
-
+    private List<Entidade> getEntidades(){
+    	return new EntidadeRN().listar();
+    }
+    
 	public Conta getConta() {
 		return conta;
 	}
@@ -246,13 +290,13 @@ public class LancamentoBean implements Serializable {
 	public void setLista(List<Lancamento> lista) {
 		this.lista = lista;
 	}
-
-	public String getEntidade() {
-		return entidade;
+	
+	public void setNumeroCheque(Integer numeroCheque) {
+		this.numeroCheque = numeroCheque;
 	}
-
-	public void setEntidade(String entidade) {
-		this.entidade = entidade;
+	
+	public Integer getNumeroCheque() {
+		return numeroCheque;
 	}
 
 	public Lancamento getSelecionado() {
@@ -262,5 +306,6 @@ public class LancamentoBean implements Serializable {
 	public void setSelecionado(Lancamento selecionado) {
 		this.selecionado = selecionado;
 	}
+	
 	
 }

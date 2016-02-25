@@ -44,10 +44,12 @@ xmlns:composite = "http://java.sun.com/jsf/composite">
 			<p:column style="width:70px">
 				<f:facet name="header">Favorecidos/Fornecedores</f:facet>
 				<h:outputText value="#{lancamento.entidade.nome}" />
+
 				<p:remoteCommand name="salvarLinha" process="@this" id="remoteCommand" actionListener="#{lancamentoBean.salvarLinha}"/>
 				<p:rating value="#{lancamento.rating}" onRate="linhaSelecionada(#{linha},'#{cc.attrs.nomeDaLista}')" cancel="false">
 					<p:ajax process="remoteCommand" />
 					<p:ajax event="rate" listener="#{lancamentoBean.onRate}" />
+
 				</p:rating>
 			</p:column>
 			<p:column style="width:70px">
@@ -88,9 +90,8 @@ xmlns:composite = "http://java.sun.com/jsf/composite">
 				} ]);
 			}
 		</script>
-		
+
 	</composite:implementation>
-	
 	
 </html>
 
