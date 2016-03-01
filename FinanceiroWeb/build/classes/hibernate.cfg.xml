@@ -27,7 +27,7 @@
 		<mapping class="financeiro.lancamento.Lancamento" />
 		<mapping class="financeiro.entidade.Entidade" />
 		<mapping class="financeiro.cheque.Cheque" />
-		
+		<mapping class="financeiro.bolsa.acao.Acao" />
 		
 	</session-factory>
 </hibernate-configuration>
