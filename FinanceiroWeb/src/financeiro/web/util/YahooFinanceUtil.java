@@ -40,7 +40,7 @@ public class YahooFinanceUtil {
 			String endereco = "http://download.finance.yahoo.com/d/quotes.csv?s=" 
 					+ sigla + "&f=sl1d1t1c1ohgv&e=.csv";
 			URL url = new URL(endereco);
-			URLConnection conexao = url.openConnection(); 
+			URLConnection conexao = url.openConnection();
 			InputStreamReader conteudo = new InputStreamReader(
 					conexao.getInputStream());
 			BufferedReader arquivo = new BufferedReader(conteudo);
