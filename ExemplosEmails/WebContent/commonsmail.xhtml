@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+	<title>Enviando E-Mail com JavaMail livro Java Para Web - Novatec</title>
+</h:head>
+<h:body>
+	<h:form id="formulario">
+		<h:messages />
+		<h:panelGrid columns="2">
+			<f:facet name="header">
+				<h:outputText value="Enviando E-Mail com JavaMail" />
+			</f:facet>
+			<h:outputText value="De:" />
+			<h:inputText value="#{commonsMailBean.de}" id="de" required="true" />
+			<h:outputText value="Para:" />
+			<h:inputText value="#{commonsMailBean.para}" id="para" required="true" />
+			<h:outputText value="Cc:" />
+			<h:inputText value="#{commonsMailBean.destinatariosNormais}" id="cc" />
+			<h:outputText value="Bcc:" />
+			<h:inputText value="#{commonsMailBean.destinatariosOcultos}" id="bcc" />
+			<h:outputText value="Assunto:" />
+			<h:inputText value="#{commonsMailBean.assunto}" id="assunto" 	required="true" />
+			<h:outputText value="Mensagem:" />
+			<h:inputTextarea rows="10" cols="30" value="#{commonsMailBean.mensagem}" 	id="mensagem" required="true" />
+			<h:outputText value="Anexo:" />
+			<h:inputText value="#{commonsMailBean.anexo}" />
+		</h:panelGrid>
+		<h:commandButton 	action="#{commonsMailBean.enviarAutenticado}" 
+							value="Enviar e-mail autenticado e com anexo" />
+		<h:commandButton 	action="#{commonsMailBean.enviarSimples}" 
+							value="Enviar e-mail simples" />	
+	</h:form>
+</h:body>
+</html>
