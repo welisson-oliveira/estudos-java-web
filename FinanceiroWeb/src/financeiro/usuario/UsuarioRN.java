@@ -40,13 +40,13 @@ public class UsuarioRN {
 		}
 	}
 
-	public void enviarEmailPosCadastramento(Usuario usuario) throws RNException {
+	public void enviarEmailPosCadastramento(Usuario usuario, String senha) throws RNException {
 		// Enviando um e-mail conforme o idioma do usuário
 		String[] info = usuario.getIdioma().split("_");
 		Locale locale = new Locale(info[0], info[1]);
 		String titulo = MensagemUtil.getMensagem(locale, "email_titulo");
 		String mensagem = MensagemUtil.getMensagem(locale, "email_mensagem",
-				usuario.getNome(), usuario.getLogin(), usuario.getSenha());
+				usuario.getNome(), usuario.getLogin(), senha);
 		try {
 			EmailUtil emailUtil = new EmailUtil();
 			emailUtil.enviarEmail(null, usuario.getEmail(), titulo, mensagem);

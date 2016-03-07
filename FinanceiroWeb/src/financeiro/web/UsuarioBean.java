@@ -72,7 +72,7 @@ public class UsuarioBean {
 		// Envia email após o cadastramento de um usuário novo
 		if (this.destinoSalvar.equalsIgnoreCase("usuariosucesso")) {
 			try {
-				usuarioRN.enviarEmailPosCadastramento(this.usuario);
+				usuarioRN.enviarEmailPosCadastramento(this.usuario,senha);
 			} catch (RNException e) {
 				context.addMessage(null, new FacesMessage(e.getMessage()));
 				return null;
