@@ -9,9 +9,10 @@
 		<h:messages />
 		<h:inputHidden value="#{lancamentoBean.editado.lancamento}" />
 
-		<h:panelGrid columns="5">
+		<h:panelGrid columns="6">
 			<h:outputLabel value="Data" for="data" />
 			<h:outputLabel value="Categoria" for="categoria" />
+			<h:outputLabel value="Favorecido/Fornecedor" for="entidade"/>
 			<h:outputLabel value="Descrição" for="descricao" />
 			<h:outputLabel value="Valor" for="valor" />
 			<h:outputLabel value="Cheque" for="numeroCheque" />
@@ -21,7 +22,9 @@
 			<h:selectOneMenu id="categoria" value="#{lancamentoBean.editado.categoria}">
 				<f:selectItems value="#{categoriaBean.categoriasSelect}"/> 
 			</h:selectOneMenu>
-
+			
+			<p:autoComplete id="entidade" value="#{lancamentoBean.entidadeSelecionada}" completeMethod="#{lancamentoBean.completeText}" />
+			
 			<h:inputText id="descricao"	value="#{lancamentoBean.editado.descricao}"
 				required="true" size="30" />
 

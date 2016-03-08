@@ -29,8 +29,8 @@ public class Usuario implements Serializable {
 	private String nome;
 	private String email;
 
-	@org.hibernate.annotations.NaturalId
 	// nao permite dados repetidos.
+	@org.hibernate.annotations.NaturalId
 	private String login;
 	private String senha;
 	private Date nascimento;

@@ -19,13 +19,13 @@
 		<authentication-provider>
 			<password-encoder hash="md5" />
 			<jdbc-user-service data-source-ref="financeiroDataSource"
-				authorities-by-username-query="SELECT u.email, p.permissao 
+				authorities-by-username-query="SELECT u.login, p.permissao 
 											 FROM usuario u, usuario_permissao p 
 											WHERE u.codigo = p.usuario 
-											  AND u.email = ?"
-				users-by-username-query="SELECT email, senha, ativo 
+											  AND u.login = ?"
+				users-by-username-query="SELECT login, senha, ativo 
 									   FROM usuario 
-									  WHERE email = ?" />
+									  WHERE login = ?" />
 		</authentication-provider>
 	</authentication-manager>
 </b:beans>

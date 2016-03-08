@@ -45,10 +45,12 @@ public class LancamentoBean implements Serializable {
 	private String listaAtiva = "";
 	
 	List<Entidade> results = new ArrayList<Entidade>();
-	private String entidade;
-
+	private String entidadeSelecionada;
+	private List<Entidade> entidades;
+	
 	@ManagedProperty(value = "#{contextoBean}")
 	private ContextoBean contextoBean;
+	
 	private List<Lancamento> listaAteHoje;
 	private List<Lancamento> listaFuturos;
 
@@ -60,6 +62,7 @@ public class LancamentoBean implements Serializable {
 		this.editado = new Lancamento();
 		this.editado.setData(new Date());
 		this.numeroCheque = null; 
+		this.entidadeSelecionada = null;
 		return null;
 	}
 
@@ -94,7 +97,23 @@ public class LancamentoBean implements Serializable {
 				chequeRN.baixarCheque(chequeId, this.editado);
 			}
 		}
-
+		
+		boolean exists = false;
+		for(Entidade e : this.entidades){
+			if(e.getNome().equalsIgnoreCase(this.entidadeSelecionada)){
+				this.editado.setEntidade(e);
+				exists = true;
+				break;
+			}
+		}
+		
+		if(!exists){
+			Entidade e = new Entidade();
+			e.setNome(this.entidadeSelecionada);
+			EntidadeRN ern = new EntidadeRN();
+			ern.salvar(e);
+			this.editado.setEntidade(e);
+		}
 		
 		LancamentoRN lancamentoRN = new LancamentoRN();
 		lancamentoRN.salvar(this.editado);
@@ -171,7 +190,7 @@ public class LancamentoBean implements Serializable {
 	}
 
 	public List<Lancamento> getListaAteHoje() {
-		if (this.listaFuturos == null) {
+		if (this.listaAteHoje == null) {
 			ContextoBean contextoBean = ContextoUtil.getContextoBean();
 			Conta conta = contextoBean.getContaAtiva();
 
@@ -200,11 +219,11 @@ public class LancamentoBean implements Serializable {
 	}
 
 	public List<String> completeText(String query) {
-		List<Entidade> entities = getEntidades();
+		this.entidades = getEntidades();
 		List<String> resultNomes = new ArrayList<String>();
 		results.clear();
-		for (Entidade e : entities) {
-			if (e.getNome().equals(query)) {
+		for (Entidade e : this.entidades) {
+			if (e.getNome().toLowerCase().startsWith(query.toLowerCase())) {
 				results.add(e);
 				resultNomes.add(e.getNome());
 			}
@@ -305,6 +324,14 @@ public class LancamentoBean implements Serializable {
 
 	public void setSelecionado(Lancamento selecionado) {
 		this.selecionado = selecionado;
+	}
+
+	public String getEntidadeSelecionada() {
+		return entidadeSelecionada;
+	}
+
+	public void setEntidadeSelecionada(String entidadeSelecionada) {
+		this.entidadeSelecionada = entidadeSelecionada;
 	}
 	
 	

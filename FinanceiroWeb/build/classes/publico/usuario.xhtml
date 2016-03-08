@@ -62,7 +62,7 @@
 				<h:outputLabel value="Senha:" for="senha" />
 				<h:inputSecret id="senha" label="Senha"
 					value="#{usuarioBean.usuario.senha}" size="10" maxlength="10"
-					redisplay="true" required="#{empty contextoBean.usuarioLogado}" />
+					redisplay="false" required="#{empty contextoBean.usuarioLogado}" />
 
 				<h:outputLabel value="Confirmar Senha:" for="confirmarSenha" />
 				<h:inputSecret id="confirmarSenha" label="Confirmar Senha"

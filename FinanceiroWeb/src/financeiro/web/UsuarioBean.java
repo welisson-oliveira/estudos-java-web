@@ -59,24 +59,29 @@ public class UsuarioBean {
 		}
 
 		UsuarioRN usuarioRN = new UsuarioRN();
-		usuarioRN.salvar(usuario);
+		try {
+			usuarioRN.salvar(usuario);
+			
+			if (this.conta.getDescricao() != null) {
+				this.conta.setUsuario(this.usuario);
+				this.conta.setFavorita(true);
 
-		if (this.conta.getDescricao() != null) {
-			this.conta.setUsuario(this.usuario);
-			this.conta.setFavorita(true);
-
-			ContaRN contaRN = new ContaRN();
-			contaRN.salvar(this.conta);
-		}
-
-		// Envia email após o cadastramento de um usuário novo
-		if (this.destinoSalvar.equalsIgnoreCase("usuariosucesso")) {
-			try {
-				usuarioRN.enviarEmailPosCadastramento(this.usuario,senha);
-			} catch (RNException e) {
-				context.addMessage(null, new FacesMessage(e.getMessage()));
-				return null;
+				ContaRN contaRN = new ContaRN();
+				contaRN.salvar(this.conta);
 			}
+
+			// Envia email após o cadastramento de um usuário novo
+			if (this.destinoSalvar.equalsIgnoreCase("usuariosucesso")) {
+				try {
+					usuarioRN.enviarEmailPosCadastramento(this.usuario,senha);
+				} catch (RNException e) {
+					context.addMessage(null, new FacesMessage(e.getMessage()));
+					return null;
+				}
+			}
+			
+		} catch (RNException e1) {
+			context.addMessage(null, new FacesMessage(e1.getMessage()));
 		}
 
 		return this.destinoSalvar;
@@ -90,6 +95,7 @@ public class UsuarioBean {
 	}
 
 	public String ativar() {
+		FacesContext context = FacesContext.getCurrentInstance();
 		if (this.usuario.isAtivo()) {
 			this.usuario.setAtivo(false);
 		} else {
@@ -97,7 +103,11 @@ public class UsuarioBean {
 		}
 
 		UsuarioRN usuarioRN = new UsuarioRN();
-		usuarioRN.salvar(this.usuario);
+		try {
+			usuarioRN.salvar(this.usuario);
+		} catch (RNException e) {
+			context.addMessage(null, new FacesMessage(e.getMessage()));
+		}
 		return null;
 	}
 

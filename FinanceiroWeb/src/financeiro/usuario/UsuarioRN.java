@@ -24,14 +24,25 @@ public class UsuarioRN {
 	public Usuario buscarPorLogin(String login) {
 		return this.usuarioDAO.buscarPorLogin(login);
 	}
+	
+	private boolean loginExiste(String login){
+		
+		Usuario u = this.usuarioDAO.buscarPorLogin(login);
+		
+		return u != null;
+	}
 
-	public void salvar(Usuario usuario) {
+	public void salvar(Usuario usuario) throws RNException {
 		Integer codigo = usuario.getCodigo();
 		if (codigo == null || codigo == 0) {
 			usuario.getPermissao().add("ROLE_USUARIO");
 			this.letrasMaiusculas(usuario);// Salva o usuario com o nome
 											// maiusculo
-			this.usuarioDAO.salvar(usuario);
+			if(!this.loginExiste(usuario.getLogin())){
+				this.usuarioDAO.salvar(usuario);
+			}else {
+				throw new RNException("Usuario já existe!"); 
+			}
 
 			CategoriaRN categoriaRN = new CategoriaRN();
 			categoriaRN.salvaEstruturaPadrao(usuario);

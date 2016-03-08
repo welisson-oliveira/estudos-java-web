@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.ExternalContext;
@@ -17,6 +18,7 @@ import financeiro.conta.Conta;
 import financeiro.conta.ContaRN;
 import financeiro.usuario.Usuario;
 import financeiro.usuario.UsuarioRN;
+import financeiro.util.RNException;
 
 
 
@@ -55,12 +57,16 @@ public class ContextoBean{
 		UsuarioRN usuarioRN = new UsuarioRN();
 		this.usuarioLogado = usuarioRN.carregar(this.getUsuarioLogado().getCodigo());
 		this.usuarioLogado.setIdioma(idioma);
-		usuarioRN.salvar(this.usuarioLogado);
+		FacesContext context = FacesContext.getCurrentInstance();
+		try {
+			usuarioRN.salvar(this.usuarioLogado);
+		} catch (RNException e) {
+			context.addMessage(null, new FacesMessage(e.getMessage()));
+		}
 		
 		String [] info = idioma.split("_");
 		Locale locale = new Locale(info[0], info[1]);
 		
-		FacesContext context = FacesContext.getCurrentInstance();
 		context.getViewRoot().setLocale(locale);
 	}
 	
