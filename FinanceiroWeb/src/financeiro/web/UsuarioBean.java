@@ -81,7 +81,9 @@ public class UsuarioBean {
 			}
 			
 		} catch (RNException e1) {
+			
 			context.addMessage(null, new FacesMessage(e1.getMessage()));
+			return null;
 		}
 
 		return this.destinoSalvar;

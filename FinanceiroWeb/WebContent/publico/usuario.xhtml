@@ -3,12 +3,13 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:ui="http://java.sun.com/jsf/facelets">
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
 
 <ui:composition template="/templates/interna.xhtml">
 
 	<ui:define name="corpo">
-		<h:form id="cadastro">
+		<h:form id="cadastro" prependId="false">
 			<h:messages />
 			<h:inputHidden value="#{usuarioBean.usuario.codigo}" />
 			<h:inputHidden value="#{usuarioBean.usuario.ativo}" />
@@ -90,6 +91,18 @@
 
 			<h:commandButton value="Salvar" action="#{usuarioBean.salvar}" />
 		</h:form>
+		
+		<script>
+			function login(xhr, status, args){
+				alert("aki fora");
+				if(args.login == false){
+					alert("aki");
+//					$("#login").focus();
+				}
+			}
+		</script>
+		
+		
 	</ui:define>
 </ui:composition>
 </html>
