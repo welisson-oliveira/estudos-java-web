@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +17,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
 
 import org.primefaces.event.RateEvent;
+import org.primefaces.model.StreamedContent;
 
 import financeiro.categoria.Categoria;
 import financeiro.cheque.Cheque;
@@ -28,6 +30,8 @@ import financeiro.lancamento.Lancamento;
 import financeiro.lancamento.LancamentoRN;
 import financeiro.util.ContextoUtil;
 import financeiro.util.RNException;
+import financeiro.util.UtilException;
+import financeiro.web.util.RelatorioUtil;
 
 @ManagedBean(name = "lancamentoBean")
 @ViewScoped
@@ -43,6 +47,10 @@ public class LancamentoBean implements Serializable {
 	
 	private Integer linhaSelecionada = -1;
 	private String listaAtiva = "";
+	
+	private Date dataInicialRelatorio;
+	private Date dataFinalRelatorio;
+	private StreamedContent arquivoRetorno;
 	
 	List<Entidade> results = new ArrayList<Entidade>();
 	private String entidadeSelecionada;
@@ -157,6 +165,34 @@ public class LancamentoBean implements Serializable {
 		this.lista = null;
 	}
 
+	public StreamedContent getArquivoRetorno() {
+		FacesContext context = FacesContext.getCurrentInstance();
+		String usuario = contextoBean.getUsuarioLogado().getLogin();
+		String nomeRelatorioJasper = "extrato";
+		String nomeRelatorioSaida = usuario + "_extrato"; 
+		LancamentoRN lancamentoRN = new LancamentoRN();
+		GregorianCalendar calendario = new GregorianCalendar();
+		calendario.setTime(this.getDataInicialRelatorio());
+		calendario.add(Calendar.DAY_OF_MONTH, -1); 
+		Date dataSaldo = new Date(calendario.getTimeInMillis());
+		RelatorioUtil relatorioUtil = new RelatorioUtil();
+		HashMap parametrosRelatorio = new HashMap(); 
+		parametrosRelatorio.put("codigoUsuario", contextoBean.getUsuarioLogado().getCodigo());
+		parametrosRelatorio.put("numeroConta", contextoBean.getContaAtiva().getConta());
+		parametrosRelatorio.put("dataInicial", this.getDataInicialRelatorio());
+		parametrosRelatorio.put("dataFinal", this.getDataFinalRelatorio());
+		parametrosRelatorio.put("saldoAnterior", lancamentoRN.saldo(contextoBean.getContaAtiva(), 
+			dataSaldo));
+		try {
+			this.arquivoRetorno = relatorioUtil.geraRelatorio(parametrosRelatorio, nomeRelatorioJasper,
+				nomeRelatorioSaida, RelatorioUtil.RELATORIO_PDF);
+		} catch (UtilException e) {
+			context.addMessage(null, new FacesMessage(e.getMessage()));
+			return null;
+		} 
+		return this.arquivoRetorno;
+	}
+	
 	public List<Lancamento> getLista() {
 		if (this.lista == null
 				|| this.conta != this.contextoBean.getContaAtiva()) {
@@ -332,6 +368,26 @@ public class LancamentoBean implements Serializable {
 
 	public void setEntidadeSelecionada(String entidadeSelecionada) {
 		this.entidadeSelecionada = entidadeSelecionada;
+	}
+
+	public Date getDataInicialRelatorio() {
+		return dataInicialRelatorio;
+	}
+
+	public void setDataInicialRelatorio(Date dataInicialRelatorio) {
+		this.dataInicialRelatorio = dataInicialRelatorio;
+	}
+
+	public Date getDataFinalRelatorio() {
+		return dataFinalRelatorio;
+	}
+
+	public void setDataFinalRelatorio(Date dataFinalRelatorio) {
+		this.dataFinalRelatorio = dataFinalRelatorio;
+	}
+
+	public void setArquivoRetorno(StreamedContent arquivoRetorno) {
+		this.arquivoRetorno = arquivoRetorno;
 	}
 	
 	
