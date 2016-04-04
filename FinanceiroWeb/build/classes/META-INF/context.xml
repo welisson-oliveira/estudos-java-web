@@ -9,7 +9,8 @@
 		username="root" 
 		password="root" 
 		driverClassName="com.mysql.jdbc.Driver" 
-		url="jdbc:mysql://localhost:3306/financeiro?autoReconnect=true" />
+		url="jdbc:mysql://localhost:3306/financeiro_teste?autoReconnect=true" />
+				
 	<Resource name="mail/Session"
 		auth="Container"
 		type="javax.mail.Session"

@@ -28,7 +28,6 @@ public class ContaDAOHibernate implements ContaDAO{
 
 	@Override
 	public Conta carregar(Integer conta) {
-
 		return (Conta) this.session.get(Conta.class, conta);
 	}
 

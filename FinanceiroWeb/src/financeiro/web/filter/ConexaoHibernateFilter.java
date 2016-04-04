@@ -9,7 +9,7 @@ import org.hibernate.Transaction;
 
 import financeiro.util.HibernateUtil;
 
-@WebFilter(urlPatterns = { "*.jsf" })
+@WebFilter(urlPatterns = { "*.jsf", "/webservice/*" })
 public class ConexaoHibernateFilter implements Filter {
 	private SessionFactory sf;
 
