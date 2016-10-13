@@ -1,0 +1,3 @@
+com\welisson\examples\config\WebConfig.class
+com\welisson\examples\WebAppInitializer.class
+com\welisson\examples\controller\MainController.class
